@@ -18,7 +18,7 @@ const LoginPage = () => {
       }}
     >
       <Button variant="contained" onClick={()=>navigate('/candidateDetails')}>Login As Admin</Button>
-      <Button variant="contained" onClick={()=>navigate('/candidateForm')}>Login As Candidate</Button>
+      <Button variant="contained" onClick={()=>navigate('/candidateForm/4f5bedd696b8')}>Login As Candidate</Button>
     </Box>
   );
 };

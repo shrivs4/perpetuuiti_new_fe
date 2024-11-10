@@ -1,11 +1,13 @@
-import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography, useMediaQuery } from '@mui/material'
-import React, { useState } from 'react'
-import { documentFields } from './constant'
+import { Box, Button, IconButton, Paper, Table, TableBody, TableCell, TableHead, TableRow, TextField, Typography, useMediaQuery } from '@mui/material'
+import React, { useEffect, useState } from 'react'
+import { documentFields, entries } from './constant'
 import { Cancel, CheckCircle, CloudUpload, Delete, Download } from '@mui/icons-material'
+import { useParams } from 'react-router-dom'
 
 const CandidateForm = () => {
 
   const isMobile = useMediaQuery((theme:any) => theme.breakpoints.down('sm'));
+  const {id} = useParams();
 
   //input parameter
   const [form,setForm] = useState({
@@ -36,10 +38,10 @@ const CandidateForm = () => {
   }
 
   const handleFileDownload = (file:any)=>{
-    const url = URL.createObjectURL(file);
+    const url = typeof(file) === 'string'? file : URL.createObjectURL(file)
     const a = document.createElement('a');
     a.href = url;
-    a.download = file.name;
+    a.download = typeof(file) !== 'string' ? file.name : 'Form.pdf';
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -52,6 +54,22 @@ const CandidateForm = () => {
     )
   }
 
+  useEffect(()=>{
+    console.log(id)
+    if(id && id !== "" ){
+      const userData:any = entries.filter((val:any) => val.id === id)[0];
+      console.log(userData)
+      if(userData){
+        setForm({
+          name: userData?.Name,
+          dateOfJoin: userData?.DOJ,
+          department: userData?.Department
+        })
+        userData?.documents && setDocuments([...userData.documents])
+      }
+    }
+  },[id])
+
   return (
     <Box p={3}>
       <Typography variant="h4" gutterBottom>Document Submission Form</Typography>
@@ -62,6 +80,7 @@ const CandidateForm = () => {
           value={form.name}
           onChange={handleInputChange}
           fullWidth
+          disabled
         />
         <TextField
           label='Date of Joining'
@@ -69,6 +88,7 @@ const CandidateForm = () => {
           value={form.dateOfJoin}
           onChange={handleInputChange}
           fullWidth
+          disabled
         />
         <TextField
           label='Department'
@@ -76,6 +96,7 @@ const CandidateForm = () => {
           value={form.department}
           onChange={handleInputChange}
           fullWidth
+          disabled
         />
       </Box>
 
@@ -145,12 +166,12 @@ const CandidateForm = () => {
                   <TableCell>Actions</TableCell>
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <TableBody className='c-candidateform-tbody'>
                 {documents?.map((doc, index) => (
                   <TableRow key={doc.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>{doc.name}</TableCell>
-                    <TableCell>
+                    <TableCell className='c-candidateForm-successind'>
                       {doc.submitted ? <CheckCircle color='success' /> : <Cancel color='error' />}
                     </TableCell>
                     <TableCell>

@@ -4,7 +4,6 @@ import PageLayout from './pages/PageLayout'
 import CandidateForm from './pages/CandidateForm'
 import CandidateDetails from './pages/CandidateDetails'
 import LoginPage from './pages/LoginPage'
-import { useState } from 'react'
 import { createTheme, ThemeProvider } from '@mui/material'
 
 function App() {
