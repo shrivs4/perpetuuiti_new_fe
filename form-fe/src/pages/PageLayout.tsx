@@ -1,5 +1,4 @@
 import { Box, Container, Typography, useMediaQuery } from '@mui/material'
-import React from 'react'
 import { Outlet } from 'react-router-dom'
 
 const PageLayout = () => {
